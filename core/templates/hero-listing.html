@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+    <br>
+    <div class="container">
+        <h3>Lista de heróis</h3>
+        <br>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Imagem</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hero in object_list %}
+                    <tr>
+                        <td>{{ hero.name }}</td>
+                        <td>{{ hero.description }}</td>
+                        {% if hero.picture %}
+                            <td><img src="{{ hero.picture.url }}" width="100%" alt="Imagem de {{ hero.name }}"></img></td>
+                        {% else %}
+                            <td><img src="{% static 'img/img-not-available.png' %}" width="100%" alt="Imagem de {{ hero.name }} não disponível"></img></td>
+                        {% endif %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <p>Nenhum herói cadastrado ainda. E agora, quem poderá nos defender?</p>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if is_paginated %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+        {% endif %}
+    </div>
+{% endblock body %}
