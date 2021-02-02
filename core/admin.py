@@ -6,4 +6,4 @@ from .models import Hero
 
 @admin.register(Hero)
 class HeroModelAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'description']
