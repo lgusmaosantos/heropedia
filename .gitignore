@@ -130,3 +130,5 @@ dmypy.json
 
 # Configurações adicionais
 heropedia/db_settings.py
+**/migrations/**
+media/
