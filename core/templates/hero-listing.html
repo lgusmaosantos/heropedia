@@ -18,6 +18,7 @@
                     <th>Nome</th>
                     <th>Descrição</th>
                     <th>Imagem</th>
+                    <th>Opções</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,6 +31,12 @@
                         {% else %}
                             <td><img src="{% static 'img/img-not-available.png' %}" width="100%" alt="Imagem de {{ hero.name }} não disponível"></img></td>
                         {% endif %}
+                        <td>
+                            <form action="{% url 'hero_delete' hero.id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-danger" value="Apagar" onclick="return confirmaApagamento()">
+                            </form>
+                        </td>
                     </tr>
                 {% empty %}
                     <tr>
@@ -64,3 +71,16 @@
         {% endif %}
     </div>
 {% endblock body %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        function confirmaApagamento() {
+            var resposta = confirm("Tem certeza de que quer apagar este registro?");
+            if (resposta)
+                return true;
+            else
+                return false;
+        }
+    </script>
+{% endblock scripts %}
