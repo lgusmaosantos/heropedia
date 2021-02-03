@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from .models import Hero
@@ -25,6 +25,17 @@ class HeroCreateView(SuccessMessageMixin, CreateView):
     fields = ['name', 'picture', 'description']
     template_name = 'hero-creation-form.html'
     success_message = 'Obrigado por criar o(a) herói/heroína %(name)s. Lembre-se: o maior superpoder é a colaboração.'
+
+    def get_success_url(self) -> str:
+        return reverse('hero_listing')
+
+
+class HeroUpdateView(SuccessMessageMixin, UpdateView):
+    """A view que possibilita a autalização/edição de um herói."""
+    model = Hero
+    template_name = 'hero-update-form.html'
+    fields = ['name', 'picture', 'description']
+    success_message = '%(name)s atualizado com sucesso.'
 
     def get_success_url(self) -> str:
         return reverse('hero_listing')

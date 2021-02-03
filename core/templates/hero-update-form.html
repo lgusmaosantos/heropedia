@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+    <br>
+    <div class="container">
+        <h3>Atualizar herói</h3>
+        <br>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" class="btn btn-success" value="Salvar (Quem salva os salvadores, né?)">
+        </form>
+        <a href="{% url 'hero_listing' %}">Voltar à página principal</a>
+    </div>
+{% endblock body %}
