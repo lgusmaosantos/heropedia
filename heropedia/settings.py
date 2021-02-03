@@ -27,7 +27,7 @@ SECRET_KEY = 't1#8rbt8jvld7vvc97jka&k=)$d_&x&m3edu3b9x+gzsr--@se'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # criado(s)
-    'core'
+    'core',
+
+    # importado(s)
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
@@ -122,3 +125,8 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = 'media'
 MEDIA_URL = '/media/'
+
+
+# Formulários Bootstrap automáticos com Crispy
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

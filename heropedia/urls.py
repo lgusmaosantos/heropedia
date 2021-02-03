@@ -21,5 +21,6 @@ from core import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.HeroListView.as_view(), name='hero-listing')
+    path('', views.HeroListView.as_view(), name='hero_listing'),
+    path('criar-heroi/', views.HeroCreateView.as_view(), name='hero_creation')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
