@@ -5,7 +5,9 @@ from django.db import models
 
 class Hero(models.Model):
     """A representação ORM de um herói."""
-    name = models.CharField(verbose_name='Nome', max_length=100)
+    name = models.CharField(verbose_name='Nome',
+                            max_length=100,
+                            unique=True)
     picture = models.ImageField('Imagem',
                                 upload_to='hero_pictures',
                                 blank=True,
