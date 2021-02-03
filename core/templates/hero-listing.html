@@ -4,7 +4,8 @@
 {% block body %}
     <br>
     <div class="container">
-        <h3>Lista de heróis</h3>
+        <h3>Lista de heróis desta linha do tempo</h3>
+        <p>Clique em um nome para atualizar um registro</p>
         <br>
         {% for message in messages %}
             <div class="alert alert-success" role="alert">
@@ -22,7 +23,7 @@
             <tbody>
                 {% for hero in object_list %}
                     <tr>
-                        <td>{{ hero.name }}</td>
+                        <td><a href="{% url 'hero_update' hero.id %}">{{ hero.name }}</a></td>
                         <td>{{ hero.description }}</td>
                         {% if hero.picture %}
                             <td><img src="{{ hero.picture.url }}" width="100%" alt="Imagem de {{ hero.name }}"></img></td>
