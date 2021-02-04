@@ -4,9 +4,21 @@
 {% block body %}
     <br>
     <div class="container">
-        <h3>Lista de heróis desta linha do tempo</h3>
+        <h2>Lista de heróis</h2>
         <p>Clique em um nome para atualizar um registro</p>
-        <br>
+        <form action="{% url 'hero_search' %}" method="GET" id="search-form">
+            <div class="form-row">
+                <div class="col-auto">
+                    <input type="text" class="form-control" required name="search_term" placeholder="Busca por nome">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" class="btn btn-primary" value="Pesquisar">
+                </div>
+            </div>
+        </form>
+        {% if origin_view == 'search' %}
+            <p>Resultado da busca por "{{ search_term }}":</p>
+        {% endif %}
         {% for message in messages %}
             <div class="alert alert-success" role="alert">
                 {{ message }}
@@ -40,7 +52,8 @@
                     </tr>
                 {% empty %}
                     <tr>
-                        <p>Nenhum herói cadastrado ainda. E agora, quem poderá nos defender?</p>
+                        <p>Nenhum herói cadastrado ainda. <i>E agora, quem poderá nos defender?</i></p>
+                        <a href="{% url 'hero_listing' %}">Voltar à página principal</a>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -24,5 +24,6 @@ urlpatterns = [
     path('', views.HeroListView.as_view(), name='hero_listing'),
     path('criar-heroi/', views.HeroCreateView.as_view(), name='hero_creation'),
     path('atualizar-heroi/<int:pk>/', views.HeroUpdateView.as_view(), name='hero_update'),
-    path('apagar-heroi/<int:pk>/', views.HeroDeleteView.as_view(), name='hero_delete')
+    path('apagar-heroi/<int:pk>/', views.HeroDeleteView.as_view(), name='hero_delete'),
+    path('buscar-heroi/', views.SearchListView.as_view(), name='hero_search')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

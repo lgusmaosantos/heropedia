@@ -62,3 +62,26 @@ class HeroDeleteView(DeleteView):
         """
         messages.success(self.request, self.success_message)
         return super(HeroDeleteView, self).delete(request, *args, **kwargs)
+
+
+class SearchListView(ListView):
+    """A view que processa a busca de heróis por nome."""
+    model = Hero
+    paginate_by = 10
+    template_name = 'hero-listing.html'
+    ordering = ['name']
+
+    def get_queryset(self):
+        """Sobrescreve `get_queryset` para filtragem pelo termo
+        de busca.
+        """
+        search_term = self.request.GET['search_term']
+        queryset = self.model.objects.filter(
+            name__icontains=search_term)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['origin_view'] = 'search'
+        context['search_term'] = self.request.GET['search_term']
+        return context
