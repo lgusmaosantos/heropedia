@@ -4,8 +4,13 @@
 {% block body %}
     <br>
     <div class="container">
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
         <h2>Heróis favoritos de {{ user }}</h2>
-
+        <a href="{% url 'hero_listing' %}">Voltar à página principal.</a>
         <table class="table">
             <thead>
                 <tr>
@@ -26,9 +31,10 @@
                             <td><img src="{% static 'img/img-not-available.png' %}" width="100%" alt="Imagem de {{ hero.name }} não disponível"></img></td>
                         {% endif %}
                         <td>
-                            <form action="#" method="POST">
+                            <form action="{% url 'remove_favorite'%}" method="POST">
                                 {% csrf_token %}
-                                <input type="submit" class="btn btn-danger" value="Remover">
+                                <input type="hidden" name="hero_id" value="{{ hero.id }}">
+                                <input type="submit" class="btn btn-danger" value="Remover" onclick="return confirmaRemocao()">
                             </form>
                         </td>
                     </tr>
@@ -66,3 +72,16 @@
         {% endif %}
     </div>
 {% endblock body %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        function confirmaRemocao() {
+            var resposta = confirm("Tem certeza de que quer remover este herói dos favoritos?");
+            if (resposta)
+                return true;
+            else
+                return false;
+        }
+    </script>
+{% endblock scripts %}

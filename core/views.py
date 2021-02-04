@@ -103,3 +103,27 @@ class FavoriteHeroesListView(ListView):
         queryset = Hero.objects.filter(
             id__in=pre_queryset.values_list('hero', flat=True))
         return queryset
+
+
+class FavoriteHeroRemovalDeleteView(DeleteView):
+    """A view que remove um herói da lista de favoritos de um
+    usuário.
+    """
+    model = FavoriteHeroesPerUser
+    ordering = ['name']
+    paginate_by = 10
+    success_message = 'Removido(a) dos favoritos com sucesso. Também já estávamos enjoados dele(a).'
+
+    def get_object(self, queryset=None):
+        user = get_user(self.request)
+        hero_id = self.request.POST['hero_id']
+        return self.model.objects.get(user=user, hero=hero_id)
+
+    def get_success_url(self):
+        return reverse('favorite_heroes')
+
+    def delete(self, request, *args, **kwargs):
+        """Um override para incluir uma mensagem de sucesso."""
+        messages.success(self.request, self.success_message)
+        return super(FavoriteHeroRemovalDeleteView, self).delete(
+            request, *args, **kwargs)
