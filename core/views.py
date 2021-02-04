@@ -1,10 +1,12 @@
+from django.db import models
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
-from .models import Hero
+from django.contrib.auth import get_user
+from .models import Hero, FavoriteHeroesPerUser
 
 # Create your views here.
 
@@ -85,3 +87,19 @@ class SearchListView(ListView):
         context['origin_view'] = 'search'
         context['search_term'] = self.request.GET['search_term']
         return context
+
+
+class FavoriteHeroesListView(ListView):
+    """A view que lista os heróis favoritos de um usuário."""
+    model = Hero
+    paginate_by = 10
+    template_name = 'favorite-heroes-listing.html'
+    ordering = ['name']
+
+    def get_queryset(self):
+        """Filtra a queryset pelo usuário da sessão."""
+        user = get_user(self.request)
+        pre_queryset = FavoriteHeroesPerUser.objects.filter(user=user)
+        queryset = Hero.objects.filter(
+            id__in=pre_queryset.values_list('hero', flat=True))
+        return queryset
