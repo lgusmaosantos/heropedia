@@ -1,2 +1,2 @@
-release: ./release-tasks.sh
+release: ./manage.py migrate
 web: gunicorn heropedia.wsgi
