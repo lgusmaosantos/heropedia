@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 from django.views.generic.base import View
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
@@ -151,3 +152,16 @@ class FavoriteHeroAddView(View):
                 user=user,
                 hero=hero)
             return redirect('favorite_heroes')
+
+
+class CustomLoginView(LoginView):
+    """A view que possibilita login na aplicação."""
+    template_name = 'login.html'
+    
+    def get_success_url(self):
+        return reverse('hero_listing')
+
+
+class CustomLogoutView(LogoutView):
+    """A view que possibilita logout da aplicação."""
+    next_page = '/'

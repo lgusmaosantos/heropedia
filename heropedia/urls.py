@@ -22,6 +22,8 @@ from core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HeroListView.as_view(), name='hero_listing'),
+    path('login/', views.CustomLoginView.as_view(), name='login'),
+    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
     path('criar-heroi/', views.HeroCreateView.as_view(), name='hero_creation'),
     path('atualizar-heroi/<int:pk>/', views.HeroUpdateView.as_view(), name='hero_update'),
     path('apagar-heroi/<int:pk>/', views.HeroDeleteView.as_view(), name='hero_delete'),
