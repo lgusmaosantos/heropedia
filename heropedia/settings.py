@@ -131,7 +131,6 @@ MEDIA_URL = '/media/'
 # Formulários Bootstrap automáticos com Crispy
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-<<<<<<< HEAD
 
 
 # Simplified static file serving.
@@ -143,5 +142,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Configure Django App for Heroku.
 import django_heroku
 django_heroku.settings(locals())
-=======
->>>>>>> main
