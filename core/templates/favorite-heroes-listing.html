@@ -4,26 +4,13 @@
 {% block body %}
     <br>
     <div class="container">
-        <h2>Lista de heróis</h2>
-        <p>Clique em um nome para atualizar um registro</p>
-        <form action="{% url 'hero_search' %}" method="GET" id="search-form">
-            <div class="form-row">
-                <div class="col-auto">
-                    <input type="text" class="form-control" required name="search_term" placeholder="Busca por nome">
-                </div>
-                <div class="col-auto">
-                    <input type="submit" class="btn btn-primary" value="Pesquisar">
-                </div>
-            </div>
-        </form>
-        {% if origin_view == 'search' %}
-            <p>Resultado da busca por "{{ search_term }}":</p>
-        {% endif %}
         {% for message in messages %}
             <div class="alert alert-success" role="alert">
                 {{ message }}
             </div>
         {% endfor %}
+        <h2>Heróis favoritos de {{ user }}</h2>
+        <a href="{% url 'hero_listing' %}">Voltar à página principal.</a>
         <table class="table">
             <thead>
                 <tr>
@@ -44,21 +31,16 @@
                             <td><img src="{% static 'img/img-not-available.png' %}" width="100%" alt="Imagem de {{ hero.name }} não disponível"></img></td>
                         {% endif %}
                         <td>
-                            <form action="{% url 'hero_delete' hero.id %}" class="options" method="POST">
-                                {% csrf_token %}
-                                <input type="submit" class="btn btn-danger" value="Apagar" onclick="return confirmaApagamento()">
-                            </form>
-                            <form action="{% url 'add_favorite' %}" method="POST" class="options">
+                            <form action="{% url 'remove_favorite'%}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="hero_id" value="{{ hero.id }}">
-                                <input type="submit" class="btn btn-primary" value="Adicionar aos favoritos">
+                                <input type="submit" class="btn btn-danger" value="Remover" onclick="return confirmaRemocao()">
                             </form>
                         </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <p>Nenhum herói cadastrado ainda. <i>E agora, quem poderá nos defender?</i></p>
-                        <a href="{% url 'hero_listing' %}">Voltar à página principal</a>
+                        <p>Nenhum herói favoritado ainda. <i>E agora, quem poderá nos defender?</i></p>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -93,8 +75,8 @@
 {% block scripts %}
     {{ block.super }}
     <script>
-        function confirmaApagamento() {
-            var resposta = confirm("Tem certeza de que quer apagar este registro?");
+        function confirmaRemocao() {
+            var resposta = confirm("Tem certeza de que quer remover este herói dos favoritos?");
             if (resposta)
                 return true;
             else

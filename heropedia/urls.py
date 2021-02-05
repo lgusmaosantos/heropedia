@@ -22,8 +22,13 @@ from core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HeroListView.as_view(), name='hero_listing'),
+    path('login/', views.CustomLoginView.as_view(), name='login'),
+    path('logout/', views.CustomLogoutView.as_view(), name='logout'),
     path('criar-heroi/', views.HeroCreateView.as_view(), name='hero_creation'),
     path('atualizar-heroi/<int:pk>/', views.HeroUpdateView.as_view(), name='hero_update'),
     path('apagar-heroi/<int:pk>/', views.HeroDeleteView.as_view(), name='hero_delete'),
-    path('buscar-heroi/', views.SearchListView.as_view(), name='hero_search')
+    path('buscar-heroi/', views.SearchListView.as_view(), name='hero_search'),
+    path('herois-favoritos/', views.FavoriteHeroesListView.as_view(), name='favorite_heroes'),
+    path('remover-favorito/', views.FavoriteHeroRemovalDeleteView.as_view(), name='remove_favorite'),
+    path('adicionar-favorito/', views.FavoriteHeroAddView.as_view(), name='add_favorite')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
