@@ -45,3 +45,6 @@ Por padrão, o Django usa a porta 8000 para operar. Caso precise usar outra port
 
 Por fim, vá ao seu navegador web e digite o endereço abaixo para usar a aplicação:
 `http://localhost:8000`
+
+Para acessar o painel administrativo da aplicação, visite:
+`http://localhost:8000/admin`
