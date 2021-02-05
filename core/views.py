@@ -5,6 +5,7 @@ from django.views.generic.base import View
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
@@ -12,6 +13,9 @@ from django.contrib.auth import get_user
 from .models import Hero, FavoriteHeroesPerUser
 
 # Create your views here.
+
+
+DEFAULT_PERMISSION_DENIED_MESSAGE = 'Você precisa de alguns poderes para isso. Pouca coisa, é só fazer login.'
 
 
 class HeroListView(ListView):
@@ -25,32 +29,41 @@ class HeroListView(ListView):
     ordering = ['name']
 
 
-class HeroCreateView(SuccessMessageMixin, CreateView):
+class HeroCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """A view onde se dá o registro de um novo herói."""
     model = Hero
     fields = ['name', 'picture', 'description']
     template_name = 'hero-creation-form.html'
     success_message = 'Obrigado por criar o(a) herói/heroína %(name)s. Lembre-se: o maior superpoder é a colaboração.'
-
+    permission_denied_message = DEFAULT_PERMISSION_DENIED_MESSAGE
+    
     def get_success_url(self) -> str:
         return reverse('hero_listing')
 
+    def get_login_url(self):
+        return reverse('login')
 
-class HeroUpdateView(SuccessMessageMixin, UpdateView):
+
+class HeroUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """A view que possibilita a autalização/edição de um herói."""
     model = Hero
     template_name = 'hero-update-form.html'
     fields = ['name', 'picture', 'description']
     success_message = '%(name)s atualizado com sucesso.'
+    permission_denied_message = DEFAULT_PERMISSION_DENIED_MESSAGE
 
     def get_success_url(self) -> str:
         return reverse('hero_listing')
 
+    def get_login_url(self):
+        return reverse('login')
 
-class HeroDeleteView(DeleteView):
+
+class HeroDeleteView(LoginRequiredMixin, DeleteView):
     """A view que possibilita a deleção de um herói."""
     model = Hero
     success_message = 'Registro apagado com sucesso. Esperamos que Thanos não tenha nada a ver com isso.'
+    permission_denied_message = DEFAULT_PERMISSION_DENIED_MESSAGE
 
     def get_success_url(self) -> str:
         return reverse('hero_listing')
@@ -67,6 +80,9 @@ class HeroDeleteView(DeleteView):
         """
         messages.success(self.request, self.success_message)
         return super(HeroDeleteView, self).delete(request, *args, **kwargs)
+
+    def get_login_url(self):
+        return reverse('login')
 
 
 class SearchListView(ListView):
@@ -92,12 +108,13 @@ class SearchListView(ListView):
         return context
 
 
-class FavoriteHeroesListView(ListView):
+class FavoriteHeroesListView(LoginRequiredMixin, ListView):
     """A view que lista os heróis favoritos de um usuário."""
     model = Hero
     paginate_by = 10
     template_name = 'favorite-heroes-listing.html'
     ordering = ['name']
+    permission_denied_message = DEFAULT_PERMISSION_DENIED_MESSAGE
 
     def get_queryset(self):
         """Filtra a queryset pelo usuário da sessão."""
@@ -107,8 +124,11 @@ class FavoriteHeroesListView(ListView):
             id__in=pre_queryset.values_list('hero', flat=True))
         return queryset
 
+    def get_login_url(self):
+        return reverse('login')
 
-class FavoriteHeroRemovalDeleteView(DeleteView):
+
+class FavoriteHeroRemovalDeleteView(LoginRequiredMixin, DeleteView):
     """A view que remove um herói da lista de favoritos de um
     usuário.
     """
@@ -117,6 +137,7 @@ class FavoriteHeroRemovalDeleteView(DeleteView):
     ordering = ['name']
     paginate_by = 10
     success_message = 'Removido(a) dos favoritos com sucesso. Também já estávamos enjoados dele(a).'
+    permission_denied_message = DEFAULT_PERMISSION_DENIED_MESSAGE
 
     def get_object(self, queryset=None):
         user = get_user(self.request)
@@ -132,11 +153,15 @@ class FavoriteHeroRemovalDeleteView(DeleteView):
         return super(FavoriteHeroRemovalDeleteView, self).delete(
             request, *args, **kwargs)
 
+    def get_login_url(self):
+        return reverse('login')
 
-class FavoriteHeroAddView(View):
+
+class FavoriteHeroAddView(LoginRequiredMixin, View):
     """A view que cuida da adição de um herói à lista de favoritos
     de um usuário."""
     allowed_methods = ['POST']
+    permission_denied_message = DEFAULT_PERMISSION_DENIED_MESSAGE
 
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -152,6 +177,9 @@ class FavoriteHeroAddView(View):
                 user=user,
                 hero=hero)
             return redirect('favorite_heroes')
+
+    def get_login_url(self):
+        return reverse('login')
 
 
 class CustomLoginView(LoginView):
