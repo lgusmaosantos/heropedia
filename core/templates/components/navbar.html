@@ -1,13 +1,18 @@
 <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
     <a href="/" class="navbar-brand">Heropedia</a>
     <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-            {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'logout' %}">Olá, {{ user }}. (Sair)</a>
-            {% else %}
+            </li>
+        {% else %}
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'login' %}">Login</a>
-            {% endif %}
-        </li>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}">Cadastre-se</a>
+            </li>
+        {% endif %}
         <li class="nav-item">
             <a class="nav-link" href="{% url 'hero_creation' %}">Criar herói</a>
         </li>
