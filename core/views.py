@@ -3,13 +3,15 @@ from django.http.response import Http404, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic.base import View
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.contrib.auth import get_user
+from django.contrib.auth.models import User
 from .models import Hero, FavoriteHeroesPerUser
 
 # Create your views here.
@@ -193,3 +195,21 @@ class CustomLoginView(LoginView):
 class CustomLogoutView(LogoutView):
     """A view que possibilita logout da aplicação."""
     next_page = '/'
+
+
+class UserCreationFormView(SuccessMessageMixin, FormView):
+    """Uma view que possibilita o cadastro de um usuário
+    na aplicação.
+    """
+    template_name = 'user-creation.html'
+    form_class = UserCreationForm
+    success_message = 'Você foi cadastrado(a) com sucesso. Faça login para continuar.'
+
+    def get_success_url(self):
+        return reverse('login')
+
+    def form_valid(self, form):
+        user = User.objects.create_user(
+            username=form.cleaned_data['username'],
+            password=form.cleaned_data['password1'])
+        return redirect(reverse('login'))
