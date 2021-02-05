@@ -1,5 +1,7 @@
 from django.db import models
-from django.shortcuts import render
+from django.http.response import Http404, HttpResponse
+from django.shortcuts import redirect, render
+from django.views.generic.base import View
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib import messages
@@ -109,6 +111,7 @@ class FavoriteHeroRemovalDeleteView(DeleteView):
     """A view que remove um herói da lista de favoritos de um
     usuário.
     """
+    allowed_methods = ['POST']
     model = FavoriteHeroesPerUser
     ordering = ['name']
     paginate_by = 10
@@ -127,3 +130,24 @@ class FavoriteHeroRemovalDeleteView(DeleteView):
         messages.success(self.request, self.success_message)
         return super(FavoriteHeroRemovalDeleteView, self).delete(
             request, *args, **kwargs)
+
+
+class FavoriteHeroAddView(View):
+    """A view que cuida da adição de um herói à lista de favoritos
+    de um usuário."""
+    allowed_methods = ['POST']
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        hero_id = request.POST.get('hero_id', None)
+
+        if hero_id:
+            try:
+                hero = Hero.objects.get(id=hero_id)
+            except Hero.DoesNotExist:
+                return Http404()
+            
+            favorite_hero_user = FavoriteHeroesPerUser.objects.get_or_create(
+                user=user,
+                hero=hero)
+            return redirect('favorite_heroes')

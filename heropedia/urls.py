@@ -27,5 +27,6 @@ urlpatterns = [
     path('apagar-heroi/<int:pk>/', views.HeroDeleteView.as_view(), name='hero_delete'),
     path('buscar-heroi/', views.SearchListView.as_view(), name='hero_search'),
     path('herois-favoritos/', views.FavoriteHeroesListView.as_view(), name='favorite_heroes'),
-    path('remover-favorito/', views.FavoriteHeroRemovalDeleteView.as_view(), name='remove_favorite')
+    path('remover-favorito/', views.FavoriteHeroRemovalDeleteView.as_view(), name='remove_favorite'),
+    path('adicionar-favorito/', views.FavoriteHeroAddView.as_view(), name='add_favorite')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

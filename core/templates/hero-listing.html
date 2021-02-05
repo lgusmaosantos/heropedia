@@ -44,9 +44,14 @@
                             <td><img src="{% static 'img/img-not-available.png' %}" width="100%" alt="Imagem de {{ hero.name }} não disponível"></img></td>
                         {% endif %}
                         <td>
-                            <form action="{% url 'hero_delete' hero.id %}" method="POST">
+                            <form action="{% url 'hero_delete' hero.id %}" class="options" method="POST">
                                 {% csrf_token %}
                                 <input type="submit" class="btn btn-danger" value="Apagar" onclick="return confirmaApagamento()">
+                            </form>
+                            <form action="{% url 'add_favorite' %}" method="POST" class="options">
+                                {% csrf_token %}
+                                <input type="hidden" name="hero_id" value="{{ hero.id }}">
+                                <input type="submit" class="btn btn-primary" value="Adicionar aos favoritos">
                             </form>
                         </td>
                     </tr>
