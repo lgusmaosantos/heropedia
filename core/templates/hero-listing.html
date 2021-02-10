@@ -6,7 +6,7 @@
     <div class="container">
         <h2>Lista de heróis</h2>
         <p>Clique em um nome para atualizar um registro</p>
-        <form action="{% url 'hero_search' %}" method="GET" id="search-form">
+        <form action="{% url 'hero_listing' %}" method="GET" id="search-form">
             <div class="form-row">
                 <div class="col-auto">
                     <input type="text" class="form-control" required name="search_term" placeholder="Busca por nome">
@@ -48,11 +48,15 @@
                                 {% csrf_token %}
                                 <input type="submit" class="btn btn-danger" value="Apagar" onclick="return confirmaApagamento()">
                             </form>
-                            <form action="{% url 'add_favorite' %}" method="POST" class="options">
-                                {% csrf_token %}
-                                <input type="hidden" name="hero_id" value="{{ hero.id }}">
-                                <input type="submit" class="btn btn-primary" value="Adicionar aos favoritos">
-                            </form>
+                            {% if hero.id in fav_heroes_ids %}
+                                <button class="btn btn-success" disabled>Favorito ✓</button>
+                            {% else %}
+                                <form action="{% url 'add_favorite' %}" method="POST" class="options">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="hero_id" value="{{ hero.id }}">
+                                    <input type="submit" class="btn btn-primary" value="Adicionar aos favoritos">
+                                </form>
+                            {% endif %}
                         </td>
                     </tr>
                 {% empty %}

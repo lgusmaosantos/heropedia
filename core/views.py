@@ -29,6 +29,44 @@ class HeroListView(ListView):
     paginate_by = 10
     template_name = 'hero-listing.html'
     ordering = ['name']
+    has_search_request = False
+
+    def get_queryset(self):
+        """Sobrescreve `get_queryset` para filtragem pelo termo
+        de busca, quando houver.
+        """
+        queryset = super(HeroListView, self).get_queryset()
+
+        if 'search_term' in self.request.GET.keys():
+            self.has_search_request = True
+            search_term = self.request.GET['search_term']
+            queryset = queryset.filter(
+                name__icontains=search_term)
+        
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        """Um override de `get_context_data` para capturar
+        os ids de heróis favoritos de um usuário, caso ele
+        esteja autenticado.
+
+        Caso tenha havido uma busca por nome, adiciona informações
+        relevantes para a construção do template (incluindo
+        `search_term`).
+        """
+        user = self.request.user
+        context = super().get_context_data(**kwargs)
+
+        if user.is_authenticated:
+            fav_heroes_ids = FavoriteHeroesPerUser.objects.filter(
+                user=user).values_list('hero', flat=True)
+            context['fav_heroes_ids'] = fav_heroes_ids
+
+        if self.has_search_request:
+            context['origin_view'] = 'search'
+            context['search_term'] = self.request.GET['search_term']
+
+        return context
 
 
 class HeroCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -85,29 +123,6 @@ class HeroDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_login_url(self):
         return reverse('login')
-
-
-class SearchListView(ListView):
-    """A view que processa a busca de heróis por nome."""
-    model = Hero
-    paginate_by = 10
-    template_name = 'hero-listing.html'
-    ordering = ['name']
-
-    def get_queryset(self):
-        """Sobrescreve `get_queryset` para filtragem pelo termo
-        de busca.
-        """
-        search_term = self.request.GET['search_term']
-        queryset = self.model.objects.filter(
-            name__icontains=search_term)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['origin_view'] = 'search'
-        context['search_term'] = self.request.GET['search_term']
-        return context
 
 
 class FavoriteHeroesListView(LoginRequiredMixin, ListView):
