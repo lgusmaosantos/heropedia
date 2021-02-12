@@ -48,8 +48,8 @@ class FavoriteHeroesViewSet(ListModelMixin,
     permission_classes = [IsAuthenticated]
     lookup_field = 'hero'
     filter_backends = [OrderingFilter]
-    ordering_fields = ['name']
-    ordering = ['name']
+    ordering_fields = ['hero__id']
+    ordering = ['hero__name']
 
     def get_queryset(self):
         """Seleciona para exibição apenas os resultados que
