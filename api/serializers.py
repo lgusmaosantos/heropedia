@@ -1,6 +1,9 @@
+from django.db import models
 from django.db.models import fields
+from rest_framework.decorators import permission_classes
 from rest_framework.serializers import ModelSerializer
-from core.models import Hero
+from rest_framework.viewsets import ModelViewSet
+from core.models import Hero, FavoriteHeroesPerUser
 
 # Serializers do projeto Heropedia
 
@@ -29,3 +32,14 @@ class HeroPictureSerializer(ModelSerializer):
     class Meta:
         model = Hero
         fields = ['picture']
+
+
+class FavoriteHeroesPerUserModelSerializer(ModelSerializer):
+    """Um serializer para a tabela com o relacionamento de
+    favorito entre `User` e `Hero`.
+    """
+
+    class Meta:
+        model = FavoriteHeroesPerUser
+        fields = ['hero']
+        depth = 1
