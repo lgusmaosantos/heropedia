@@ -1,0 +1,400 @@
+{
+	"info": {
+		"_postman_id": "cb22cc2f-9be7-43c4-bab9-ea02673ef4fe",
+		"name": "Heropedia API",
+		"description": "A coleção de rotas para a API REST do app Heropedia.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autenticação",
+			"item": [
+				{
+					"name": "Obter token de acesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"// Define o token recebido como variável para as requisições",
+									"pm.collectionVariables.set(\"auth_token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"\",\n    \"password\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}api-get-token/",
+							"host": [
+								"{{host}}api-get-token"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Uma requisição `PATCH` para a alteração de um registro de herói. Podem ser informados os campos `name` e/ou `description`.\n\nRequer que o usuário esteja autenticado por token (basta usar a rota `POST` \"Obter token de acesso\", informando `username` e `password` de um usuário criado na aplicação)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gerenciar registros de herói",
+			"item": [
+				{
+					"name": "Listar heróis",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"senhaboa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}api/hero/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hero",
+								""
+							]
+						},
+						"description": "Lista simples dos heróis resgistrados em banco de dados."
+					},
+					"response": []
+				},
+				{
+					"name": "Obter herói específico",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}api/hero/<int:id>/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hero",
+								"<int:id>",
+								""
+							]
+						},
+						"description": "Um GET específico para o herói com id = <int:id>."
+					},
+					"response": []
+				},
+				{
+					"name": "Criar herói",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"\",\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}api/hero/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hero",
+								""
+							]
+						},
+						"description": "Uma requisição `POST` para a criação de um novo registro de herói. Deve conter os campos `name` e `description`, ambos textuais.\n\nRequer  autenticação por token (header `Authorization`, com variável `auth_token`)."
+					},
+					"response": []
+				},
+				{
+					"name": "Alterar herói",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"\",\n    \"description\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}api/hero/<int:id>/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hero",
+								"<int:id>",
+								""
+							]
+						},
+						"description": "Alteração de um registro de herói dado por <int:id> através de um método `PATCH`.\n\nRequer que o usuário esteja autenticado por token (basta usar a rota `POST` \"Obter token de acesso\", informando `username` e `password` de um usuário criado na aplicação)."
+					},
+					"response": []
+				},
+				{
+					"name": "Apagar herói",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/hero/<int:id>/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hero",
+								"<int:id>",
+								""
+							]
+						},
+						"description": "Uma rota `DELETE` para se apagar o registro de herói com ID dado em <int:id>.\n\nRequer que o usuário esteja autenticado por token (basta usar a rota `POST` \"Obter token de acesso\", informando `username` e `password` de um usuário criado na aplicação)."
+					},
+					"response": []
+				},
+				{
+					"name": "Busca de heróis por nome",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}api/hero/?search=<str:search_term>",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hero",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "<str:search_term>"
+								}
+							]
+						},
+						"description": "Uma rota `GET` que possibilita a busca de heróis pelo campo `name` da tabela `Hero`.\n\nA busca é do tipo `ICONTAINS`, ou seja, serão retornados os heróis cujos nomes contenham o termo pesquisado (<str:search_term>), estando em caixa alta ou não."
+					},
+					"response": []
+				},
+				{
+					"name": "Carregar imagem de herói",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "picture",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}api/hero-picture/<int:id>/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"hero-picture",
+								"<int:id>",
+								""
+							]
+						},
+						"description": "Uma rota `PATCH` dedicada à submissão ou alteração de arquivos de imagem para o herói.\n\nA natureza de arquivo do campo `picture` faz com que seja mais conveniente que haja uma rota exclusiva para ele, ao invés de contar com mecanismos para a conversão de imagens em requests JSON.\n\nRequer que o usuário esteja autenticado por token (basta usar a rota `POST` \"Obter token de acesso\", informando `username` e `password` de um usuário criado na aplicação)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gerenciar favoritos",
+			"item": [
+				{
+					"name": "Adicionar herói aos favoritos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hero\": <int:id>\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}api/favorite/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"favorite",
+								""
+							]
+						},
+						"description": "Uma rota `POST` para a adição de um herói à lista de favoritos de um usuário autenticado.\n\nDeve constar no corpo da requisição o campo `hero`, preenchido com o ID de um herói já cadastrado.\n\nRequer que o usuário esteja autenticado por token (basta usar a rota `POST` \"Obter token de acesso\", informando `username` e `password` de um usuário criado na aplicação)."
+					},
+					"response": []
+				},
+				{
+					"name": "Listar heróis favoritos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/favorite/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"favorite",
+								""
+							]
+						},
+						"description": "Uma rota `GET` para listar os heróis favoritos  selecionados por um usuário.\n\nRequer que o usuário esteja autenticado por token (basta usar a rota `POST` \"Obter token de acesso\", informando `username` e `password` de um usuário criado na aplicação)."
+					},
+					"response": []
+				},
+				{
+					"name": "Apagar herói das favoritos",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/favorite/<int:id>/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"favorite",
+								"<int:id>",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:8000/"
+		},
+		{
+			"key": "auth_token",
+			"value": ""
+		}
+	]
+}
