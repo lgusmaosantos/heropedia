@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.authtoken.views import obtain_auth_token
 from core import views
 
 urlpatterns = [
@@ -32,7 +33,11 @@ urlpatterns = [
     path('remover-favorito/', views.FavoriteHeroRemovalDeleteView.as_view(), name='remove_favorite'),
     path('adicionar-favorito/', views.FavoriteHeroAddView.as_view(), name='add_favorite'),
 
-    # REST API URLs
-    # Login e logout
-    path('api-auth/', include('rest_framework.urls'))
+    ### REST API
+
+    # Obtenção de token
+    path('api-get-token/', obtain_auth_token),
+
+    # URLs do projeto
+    path('api/', include('api.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
