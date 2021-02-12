@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from core import views
@@ -30,5 +30,9 @@ urlpatterns = [
     path('apagar-heroi/<int:pk>/', views.HeroDeleteView.as_view(), name='hero_delete'),
     path('herois-favoritos/', views.FavoriteHeroesListView.as_view(), name='favorite_heroes'),
     path('remover-favorito/', views.FavoriteHeroRemovalDeleteView.as_view(), name='remove_favorite'),
-    path('adicionar-favorito/', views.FavoriteHeroAddView.as_view(), name='add_favorite')
+    path('adicionar-favorito/', views.FavoriteHeroAddView.as_view(), name='add_favorite'),
+
+    # REST API URLs
+    # Login e logout
+    path('api-auth/', include('rest_framework.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

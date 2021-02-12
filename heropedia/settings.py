@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'core',
 
     # importado(s)
-    'crispy_forms'
+    'crispy_forms',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
